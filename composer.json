@@ -1,0 +1,56 @@
+{
+    "name": "arietimmerman/laravel-saml",
+    "description": "Laravel Package for creating a SAML identity provider",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arie Timmerman",
+            "email": "arietimmerman@gmail.com"
+        }
+    ],
+    "require": {
+		"php": "^7.0",
+        "illuminate/auth": "~6.0",
+        "illuminate/console": "~6.0",
+        "illuminate/container": "~6.0",
+        "illuminate/contracts": "~6.0",
+        "illuminate/database": "~6.0",
+        "illuminate/encryption": "~6.0",
+        "illuminate/hashing": "^6.0",
+        "illuminate/http": "~6.0",
+        "illuminate/support": "~6.0",
+        "simplesamlphp/saml2": "^3.1",
+        "symfony/workflow": "^4.0",
+        "simplesamlphp/simplesamlphp": "^1.15",
+        "robrichards/xmlseclibs": "^3.0"
+    },
+    "classmap": [
+        "database/migrations"
+    ],
+    "autoload": {
+        "psr-4": {"ArieTimmerman\\Laravel\\SAML\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ArieTimmerman\\Laravel\\SAML\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.0",
+        "fzaninotto/faker": "^1.7",
+        "squizlabs/php_codesniffer": "^3.2"
+    },
+    
+    "extra": {
+	    "laravel": {
+	        "providers": [
+	            "ArieTimmerman\\Laravel\\SAML\\ServiceProvider"
+	        ],
+	        "aliases": {
+	            "SAMLHelper": "ArieTimmerman\\Laravel\\SAML\\Helper"
+	        }
+	    }
+	}
+	
+}
