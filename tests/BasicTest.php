@@ -1,7 +1,8 @@
 <?php
 
-namespace ArieTimmerman\Laravel\SCIMServer\Tests;
+namespace ArieTimmerman\Laravel\SAML\Tests;
 
+use ArieTimmerman\Laravel\SAML\Tests\Model\User;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -11,7 +12,7 @@ class BasicTest extends TestCase
     
     use RefreshDatabase;
     
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         
@@ -21,7 +22,7 @@ class BasicTest extends TestCase
         
         \ArieTimmerman\Laravel\SAML\RouteProvider::routes();
         
-        factory(\App\User::class, 100)->create();
+        factory(User::class, 100)->create();
     }
 
     protected function getEnvironmentSetUp($app)

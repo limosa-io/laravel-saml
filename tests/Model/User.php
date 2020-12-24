@@ -1,6 +1,6 @@
 <?php
 
-namespace ArieTimmerman\Laravel\SCIMServer\Tests\Model;
+namespace ArieTimmerman\Laravel\SAML\Tests\Model;
 
 class User extends \Illuminate\Foundation\Auth\User
 {
