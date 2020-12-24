@@ -28,7 +28,7 @@ abstract class AbstractResponseBuilder
     private $issueInstant;
 
     /**
-     * @var \XMLSecurityKey|null
+     * @var XMLSecurityKey|null
      */
     private $signatureKey;
 

@@ -13,8 +13,8 @@ return [
   'useTestLogin' => true,
 
   'metadata.sign.algorithm' => XMLSecurityKey::RSA_SHA256,
-  'metadata_key_private' => file_get_contents(dirname(dirname(__FILE__)) . '/private.key'),
-  'metadata_key_public' => file_get_contents(dirname(dirname(__FILE__)) . '/public.key'),
+  'metadata_key_private' => @file_get_contents(dirname(dirname(__FILE__)) . '/keys/private.key'),
+  'metadata_key_public' => @file_get_contents(dirname(dirname(__FILE__)) . '/keys/public.key'),
 
   'idp' => [
 
@@ -44,8 +44,8 @@ return [
         'encryption' => false,
 
         // 'X509Certificate' MUST contain the certificate without the "-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----" parts.
-        'X509Certificate' => file_get_contents(dirname(dirname(__FILE__)) . '/public.key'),
-        'private' => file_get_contents(dirname(dirname(__FILE__)) . '/private.key'),
+        'X509Certificate' => @file_get_contents(dirname(dirname(__FILE__)) . '/keys/public.key'),
+        'private' => @file_get_contents(dirname(dirname(__FILE__)) . '/keys/private.key'),
       ]
     ],
 

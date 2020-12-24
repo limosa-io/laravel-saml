@@ -25,6 +25,7 @@ use ArieTimmerman\Laravel\SAML\Exceptions\UnsupportedBindingException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 class HttpRedirectBinding extends AbstractHttpBinding
 {
@@ -105,7 +106,7 @@ class HttpRedirectBinding extends AbstractHttpBinding
         return new RedirectResponse($destination);
     }
 
-    protected function buildRequest($destination, $encodedRequest, $relayState, \XMLSecurityKey $signatureKey)
+    protected function buildRequest($destination, $encodedRequest, $relayState, XMLSecurityKey $signatureKey)
     {
         $msg = 'SAMLRequest=' . urlencode($encodedRequest);
 

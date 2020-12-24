@@ -11,6 +11,11 @@ class BasicTest extends TestCase
     protected $baseUrl = 'http://localhost';
     
     use RefreshDatabase;
+
+    protected function getPackageProviders($app)
+    {
+        return ['ArieTimmerman\Laravel\SAML\ServiceProvider'];
+    }
     
     protected function setUp(): void
     {
@@ -28,6 +33,9 @@ class BasicTest extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app ['config']->set('app.url', 'http://localhost');
+
+        $app['config']->set('app.key', 'base64:1234mRasdLA123F0JiF02Og3bLXbk5qPE8H3+vX2O5M=');
+
         ;
         $app ['config']->set('saml', include realpath(dirname(__DIR__).'/config/saml.php'));
         
@@ -42,7 +50,7 @@ class BasicTest extends TestCase
     
     public function testGet()
     {
-        $response = $this->get('/test/something');
+        $response = $this->get('/saml/v2/metadata.xml');
         
         $response->assertStatus(200);
     }

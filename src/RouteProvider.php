@@ -2,8 +2,8 @@
 
 namespace ArieTimmerman\Laravel\SAML;
 
-use Route;
 use ArieTimmerman\Laravel\SAML\Middleware\SAMLState;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Helper class for the URL shortener

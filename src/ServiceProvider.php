@@ -9,6 +9,7 @@ namespace ArieTimmerman\Laravel\SAML;
 use ArieTimmerman\Laravel\SAML\Console\Commands\ParseMetadata;
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepository;
 use ArieTimmerman\Laravel\SAML\Providers\HostedIdentityProviderProcessor;
+use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepository;
 use SimpleSAML\Configuration;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -29,7 +30,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $router->middleware('SAMLState', 'ArieTimmerman\Laravel\SAML\Middleware\SAMLState');
 
         $this->app->bindIf('ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface', RemoteServiceProviderConfigRepository::class);
-        $this->app->bindIf('ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface', HostedIdentityProviderProcessor::class);
+        $this->app->bindIf('ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface', HostedIdentityProviderConfigRepository::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([
