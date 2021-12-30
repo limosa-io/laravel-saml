@@ -1,4 +1,9 @@
 
+
+![](https://github.com/arietimmerman/laravel-saml/workflows/CI/badge.svg)
+[![Latest Stable Version](https://poser.pugx.org/arietimmerman/laravel-saml/v/stable)](https://packagist.org/packages/arietimmerman/laravel-saml)
+[![Total Downloads](https://poser.pugx.org/arietimmerman/laravel-saml/downloads)](https://packagist.org/packages/arietimmerman/laravel-saml)
+
 # SAML for Laravel
 
 This is an SAML Identity Provider written in PHP with Laravel, built on top of [simplesamlphp/simplesamlphp](https://github.com/simplesamlphp/simplesamlphp) and some pieces of `adactive-sas/saml2-bridge-bundle`.

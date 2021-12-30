@@ -1,7 +1,8 @@
 <?php
 
-namespace ArieTimmerman\Laravel\SCIMServer\Tests;
+namespace ArieTimmerman\Laravel\SAML\Tests;
 
+use ArieTimmerman\Laravel\SAML\Tests\Model\User;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -10,8 +11,13 @@ class BasicTest extends TestCase
     protected $baseUrl = 'http://localhost';
     
     use RefreshDatabase;
+
+    protected function getPackageProviders($app)
+    {
+        return ['ArieTimmerman\Laravel\SAML\ServiceProvider'];
+    }
     
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         
@@ -21,12 +27,15 @@ class BasicTest extends TestCase
         
         \ArieTimmerman\Laravel\SAML\RouteProvider::routes();
         
-        factory(\App\User::class, 100)->create();
+        factory(User::class, 100)->create();
     }
 
     protected function getEnvironmentSetUp($app)
     {
         $app ['config']->set('app.url', 'http://localhost');
+
+        $app['config']->set('app.key', 'base64:1234mRasdLA123F0JiF02Og3bLXbk5qPE8H3+vX2O5M=');
+
         ;
         $app ['config']->set('saml', include realpath(dirname(__DIR__).'/config/saml.php'));
         
@@ -41,7 +50,7 @@ class BasicTest extends TestCase
     
     public function testGet()
     {
-        $response = $this->get('/test/something');
+        $response = $this->get('/saml/v2/metadata.xml');
         
         $response->assertStatus(200);
     }

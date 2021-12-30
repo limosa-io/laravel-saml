@@ -25,7 +25,7 @@ use ArieTimmerman\Laravel\SAML\Exceptions\UnsupportedBindingException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use \RobRichards\XMLSecLibs\XMLSecurityKey;
+use RobRichards\XMLSecLibs\XMLSecurityKey;
 
 class HttpRedirectBinding extends AbstractHttpBinding
 {

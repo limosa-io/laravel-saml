@@ -526,7 +526,7 @@ class HostedIdentityProviderProcessor
 
     /**
      *
-     * @return \XMLSecurityKey
+     * @return XMLSecurityKey
      */
     protected function getIdentityProviderXmlPrivateKey()
     {
@@ -544,7 +544,7 @@ class HostedIdentityProviderProcessor
 
     /**
      *
-     * @return \XMLSecurityKey
+     * @return 
      */
     protected function getIdentityProviderXmlPublicKey()
     {
