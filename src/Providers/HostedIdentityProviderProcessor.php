@@ -46,6 +46,7 @@ use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepository
 use ArieTimmerman\Laravel\SAML\Subject;
 use Illuminate\Http\Response;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
+use SimpleSAML\Metadata\SAMLBuilder;
 
 class HostedIdentityProviderProcessor
 {
@@ -122,7 +123,7 @@ class HostedIdentityProviderProcessor
 
         //TODO: For now, disable asserts due to errors.
         assert_options(ASSERT_ACTIVE, 0);
-        $metaBuilder = new \SimpleSAML_Metadata_SAMLBuilder($metaArray['entityId'], $metaArray['cacheDuration'], $metaArray['expire']);
+        $metaBuilder = new SAMLBuilder($metaArray['entityId'], $metaArray['cacheDuration'], $metaArray['expire']);
 
         $metaArray['metadata-set'] = 'saml20-idp-remote';
         $metaArray['entityid'] = $metaArray['entityId'];

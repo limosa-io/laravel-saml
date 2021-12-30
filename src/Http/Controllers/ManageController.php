@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface;
 use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
 use ArieTimmerman\Laravel\SAML\Exceptions\Manage\ApiException;
+use SimpleSAML\Metadata\SAMLParser;
 
 class ManageController extends Controller
 {
@@ -128,7 +129,7 @@ class ManageController extends Controller
             //TODO: For now, disable asserts due to errors.
             assert_options(ASSERT_ACTIVE, 0);
             
-            $parsed = \SimpleSAML_Metadata_SAMLParser::parseString($request->input('metadata'));
+            $parsed = SAMLParser::parseString($request->input('metadata'));
             $parsed = $parsed->getMetadata20SP();
 
             if (resolve(RemoteServiceProviderConfigRepositoryInterface::class)->get($parsed['entityid']) != null) {
