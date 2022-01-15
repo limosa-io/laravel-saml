@@ -226,7 +226,7 @@ class HostedIdentityProviderProcessor
             $this->stateHandler->get()
                 ->setAuthnContext($this->identityProvider->getPreviousSessionAuthnContextClassRef());
 
-            // TODO:
+        // TODO:
             // return $this->continueSingleSignOn();
         } else {
             return $response;
@@ -443,7 +443,7 @@ class HostedIdentityProviderProcessor
         $nameIdValue = $serviceProvider->getNameIdValueForUser($nameIdFormat, $subject);
 
         $assertionBuilder = new AssertionBuilder();
-        $assertionBuilder->setNotOnOrAfter(new \DateInterval('PT5M'))->setSessionNotOnOrAfter(new \DateInterval('P1D'))->setIssuer($this->identityProvider->getEntityId())->setNameId($nameIdValue, $nameIdFormat, $serviceProvider->getNameQualifier(), $authnRequest->getIssuer())->setConfirmationMethod(Constants::CM_BEARER)->setInResponseTo($authnRequest->getId())->setRecipient($serviceProvider->getAssertionConsumerUrl($authnRequest))->setAuthnContext($state->getAuthnContext());
+        $assertionBuilder->setNotOnOrAfter(new \DateInterval('PT5M'))->setSessionNotOnOrAfter(new \DateInterval('P1D'))->setIssuer($this->identityProvider->getIssuer())->setNameId($nameIdValue, $nameIdFormat, $serviceProvider->getNameQualifier(), $authnRequest->getIssuer())->setConfirmationMethod(Constants::CM_BEARER)->setInResponseTo($authnRequest->getId())->setRecipient($serviceProvider->getAssertionConsumerUrl($authnRequest))->setAuthnContext($state->getAuthnContext());
 
         foreach ($subject->getAttributes($authnRequest) as $attribute => $value) {
             $assertionBuilder->setAttribute($attribute, $value);
@@ -456,7 +456,7 @@ class HostedIdentityProviderProcessor
             $assertionBuilder->sign($this->getIdentityProviderXmlPrivateKey(), $this->getIdentityProviderXmlPublicKey());
         }
 
-        $authnResponseBuilder = (new AuthnResponseBuilder())->setStatus(\SAML2\Constants::STATUS_SUCCESS)->setIssuer($this->identityProvider->getEntityId())->setRelayState($authnRequest->getRelayState())->setDestination($serviceProvider->getAssertionConsumerUrl($authnRequest))->addAssertionBuilder($assertionBuilder)->setInResponseTo($authnRequest->getId())->setWantSignedAssertions($serviceProvider->wantSignedAssertions())->setSignatureKey($this->getIdentityProviderXmlPrivateKey());
+        $authnResponseBuilder = (new AuthnResponseBuilder())->setStatus(\SAML2\Constants::STATUS_SUCCESS)->setIssuer($this->identityProvider->getIssuer())->setRelayState($authnRequest->getRelayState())->setDestination($serviceProvider->getAssertionConsumerUrl($authnRequest))->addAssertionBuilder($assertionBuilder)->setInResponseTo($authnRequest->getId())->setWantSignedAssertions($serviceProvider->wantSignedAssertions())->setSignatureKey($this->getIdentityProviderXmlPrivateKey());
 
         $response = $authnResponseBuilder->getResponse();
 
@@ -480,7 +480,7 @@ class HostedIdentityProviderProcessor
 
         $authnResponseBuilder = new AuthnResponseBuilder();
 
-        return $authnResponseBuilder->setStatus($samlStatus)->setIssuer($this->identityProvider->getEntityId())->setRelayState($authnRequest->getRelayState())->setDestination($serviceProvider->getAssertionConsumerUrl($authnRequest))->setInResponseTo($authnRequest->getId())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->getResponse();
+        return $authnResponseBuilder->setStatus($samlStatus)->setIssuer($this->identityProvider->getIssuer())->setRelayState($authnRequest->getRelayState())->setDestination($serviceProvider->getAssertionConsumerUrl($authnRequest))->setInResponseTo($authnRequest->getId())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->getResponse();
     }
 
     /**
@@ -493,7 +493,7 @@ class HostedIdentityProviderProcessor
         $logoutRequestBuilder = new LogoutRequestBuilder();
         
         // TODO: get the nameid format for getNameIdValueForUser
-        return $logoutRequestBuilder->setNameId($serviceProvider->getNameIdValueForUser(null, $user), \SAML2\Constants::NAMEFORMAT_BASIC)->setIssuer($this->identityProvider->getEntityId())->setDestination($serviceProvider->getSingleLogoutUrl())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->getRequest();
+        return $logoutRequestBuilder->setNameId($serviceProvider->getNameIdValueForUser(null, $user), \SAML2\Constants::NAMEFORMAT_BASIC)->setIssuer($this->identityProvider->getIssuer())->setDestination($serviceProvider->getSingleLogoutUrl())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->getRequest();
     }
 
     /**
@@ -507,16 +507,17 @@ class HostedIdentityProviderProcessor
 
         $logoutResponseBuilder = new LogoutResponseBuilder();
 
-        return $logoutResponseBuilder->setInResponseTo($logoutRequest->getId())->setDestination($serviceProvider->getSingleLogoutUrl())->setIssuer($this->identityProvider->getEntityId())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->setStatus(\SAML2\Constants::STATUS_SUCCESS)->setRelayState($logoutRequest->getRelayState())->getResponse();
+        return $logoutResponseBuilder->setInResponseTo($logoutRequest->getId())->setDestination($serviceProvider->getSingleLogoutUrl())->setIssuer($this->identityProvider->getIssuer())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->setStatus(\SAML2\Constants::STATUS_SUCCESS)->setRelayState($logoutRequest->getRelayState())->getResponse();
     }
 
     /**
      *
-     * @param $entityId
+     * @param \SAML2\XML\saml\Issuer $entityId
      * @return RemoteServiceProvider
      */
     protected function getServiceProvider($entityId)
     {
+        $entityId = $entityId->getValue();
         $result = $this->serviceProviderRepository->getServiceProvider($entityId);
 
         if ($result == null) {

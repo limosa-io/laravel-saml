@@ -24,6 +24,7 @@ use ArieTimmerman\Laravel\SAML\SAML2\Container;
 use ArieTimmerman\Laravel\SAML\SAMLConfig;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
 use SAML2\Compat\ContainerSingleton;
+use SAML2\XML\saml\Issuer;
 
 class HostedIdentityProvider
 {
@@ -31,7 +32,6 @@ class HostedIdentityProvider
 
     public function __construct($configuration)
     {
-
         ContainerSingleton::setContainer(new Container());
 
         $this->identityProvider = new IdentityProvider($configuration);
@@ -127,5 +127,12 @@ class HostedIdentityProvider
     public function getEntityId()
     {
         return $this->identityProvider->getEntityId();
+    }
+
+    public function getIssuer()
+    {
+        $issuer = new Issuer();
+        $issuer->setValue($this->getEntityId());
+        return $issuer;
     }
 }

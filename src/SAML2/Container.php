@@ -32,7 +32,7 @@ class Container extends AbstractContainer
      */
     public function generateId() : string
     {
-        throw new Exception("not supported");
+        return '_' . bin2hex(openssl_random_pseudo_bytes((43 - 1) / 2));
     }
 
 
