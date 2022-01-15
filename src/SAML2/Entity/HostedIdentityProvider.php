@@ -20,8 +20,10 @@ namespace ArieTimmerman\Laravel\SAML\SAML2\Entity;
 
 use SAML2\Configuration\IdentityProvider;
 use ArieTimmerman\Laravel\SAML\Exceptions\SAMLException;
+use ArieTimmerman\Laravel\SAML\SAML2\Container;
 use ArieTimmerman\Laravel\SAML\SAMLConfig;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
+use SAML2\Compat\ContainerSingleton;
 
 class HostedIdentityProvider
 {
@@ -29,6 +31,9 @@ class HostedIdentityProvider
 
     public function __construct($configuration)
     {
+
+        ContainerSingleton::setContainer(new Container());
+
         $this->identityProvider = new IdentityProvider($configuration);
     }
     
