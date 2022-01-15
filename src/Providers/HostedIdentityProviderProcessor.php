@@ -43,6 +43,7 @@ use ArieTimmerman\Laravel\SAML\Events\ReceivedSAMLMessage;
 use ArieTimmerman\Laravel\SAML\Events\SendSAMLResponse;
 use ArieTimmerman\Laravel\SAML\SAMLConfig;
 use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
+use ArieTimmerman\Laravel\SAML\SAML2\Entity\RemoteServiceProvider;
 use ArieTimmerman\Laravel\SAML\Subject;
 use Illuminate\Http\Response;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
@@ -217,14 +218,16 @@ class HostedIdentityProviderProcessor
 
         //if we start, we should finish ...
         //TODO: create event listener. Write in readme to emit event upon authentication completion
-        // 	$this->stateHandler->apply ( SamlStateHandler::TRANSITION_SSO_START_AUTHENTICATE );
+        // $this->stateHandler->apply ( SamlStateHandler::TRANSITION_SSO_START_AUTHENTICATE );
         
         $response = $this->identityProvider->getStartAuthenticateResponse($this->stateHandler->get());
 
         if ($response == null) {
-            $this->stateHandler->get()->setAuthnContext($this->identityProvider->getPreviousSessionAuthnContextClassRef());
+            $this->stateHandler->get()
+                ->setAuthnContext($this->identityProvider->getPreviousSessionAuthnContextClassRef());
 
-            return $this->continueSingleSignOn();
+            // TODO:
+            // return $this->continueSingleSignOn();
         } else {
             return $response;
         }
@@ -278,7 +281,7 @@ class HostedIdentityProviderProcessor
         event(new SendSAMLResponse($authnResponse));
 
         // if ($sp->wantSignedAuthnResponse()) {
-        // 	$response = $outBinding->getSignedResponse($authnResponse);
+        // $response = $outBinding->getSignedResponse($authnResponse);
         // } else {
         $response = $outBinding->getUnsignedResponse($authnResponse);
         // }
@@ -442,7 +445,7 @@ class HostedIdentityProviderProcessor
         $assertionBuilder = new AssertionBuilder();
         $assertionBuilder->setNotOnOrAfter(new \DateInterval('PT5M'))->setSessionNotOnOrAfter(new \DateInterval('P1D'))->setIssuer($this->identityProvider->getEntityId())->setNameId($nameIdValue, $nameIdFormat, $serviceProvider->getNameQualifier(), $authnRequest->getIssuer())->setConfirmationMethod(Constants::CM_BEARER)->setInResponseTo($authnRequest->getId())->setRecipient($serviceProvider->getAssertionConsumerUrl($authnRequest))->setAuthnContext($state->getAuthnContext());
 
-        foreach ($subject->getAttributes($authnRequest) as $attribute=>$value) {
+        foreach ($subject->getAttributes($authnRequest) as $attribute => $value) {
             $assertionBuilder->setAttribute($attribute, $value);
         }
 
@@ -482,10 +485,10 @@ class HostedIdentityProviderProcessor
 
     /**
      *
-     * @param ServiceProvider $serviceProvider
+     * @param RemoteServiceProvider $serviceProvider
      * @return \SAML2\LogoutRequest
      */
-    protected function buildLogoutRequest(ServiceProvider $serviceProvider, $user)
+    protected function buildLogoutRequest(RemoteServiceProvider $serviceProvider, $user)
     {
         $logoutRequestBuilder = new LogoutRequestBuilder();
         
@@ -509,9 +512,8 @@ class HostedIdentityProviderProcessor
 
     /**
      *
-     * @param
-     *        	$entityId
-     * @return ServiceProvider
+     * @param $entityId
+     * @return RemoteServiceProvider
      */
     protected function getServiceProvider($entityId)
     {
@@ -544,7 +546,7 @@ class HostedIdentityProviderProcessor
 
     /**
      *
-     * @return 
+     * @return XMLSecurityKey
      */
     protected function getIdentityProviderXmlPublicKey()
     {
