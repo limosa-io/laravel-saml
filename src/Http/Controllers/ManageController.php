@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepositoryInterface;
 use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepositoryInterface;
 use ArieTimmerman\Laravel\SAML\Exceptions\Manage\ApiException;
-use SimpleSAML\Metadata\SAMLParser;
+use ArieTimmerman\Laravel\SAML\SimpleSAML\SAMLParser;
 
 class ManageController extends Controller
 {

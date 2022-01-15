@@ -22,7 +22,6 @@
         "illuminate/support": "^6.0|^7.0|^8.0",
         "simplesamlphp/saml2": "^4",
         "symfony/workflow": "^4.0",
-        "simplesamlphp/simplesamlphp": "^1.19",
         "robrichards/xmlseclibs": "^3.0"
     },
     "classmap": [

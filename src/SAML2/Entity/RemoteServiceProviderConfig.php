@@ -2,9 +2,6 @@
 
 namespace ArieTimmerman\Laravel\SAML\SAML2\Entity;
 
-use ArieTimmerman\Laravel\SAML\Exceptions\SAMLException;
-use SimpleSAML\XML\Shib13\AuthnRequest;
-
 class RemoteServiceProviderConfig implements RemoteServiceProviderConfigInterface
 {
     protected $config;

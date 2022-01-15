@@ -47,7 +47,7 @@ use ArieTimmerman\Laravel\SAML\SAML2\Entity\RemoteServiceProvider;
 use ArieTimmerman\Laravel\SAML\Subject;
 use Illuminate\Http\Response;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
-use SimpleSAML\Metadata\SAMLBuilder;
+use ArieTimmerman\Laravel\SAML\SimpleSAML\SAMLBuilder;
 
 class HostedIdentityProviderProcessor
 {

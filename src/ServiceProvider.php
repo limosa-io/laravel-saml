@@ -9,7 +9,7 @@ namespace ArieTimmerman\Laravel\SAML;
 use ArieTimmerman\Laravel\SAML\Console\Commands\ParseMetadata;
 use ArieTimmerman\Laravel\SAML\Repository\RemoteServiceProviderConfigRepository;
 use ArieTimmerman\Laravel\SAML\Repository\HostedIdentityProviderConfigRepository;
-use SimpleSAML\Configuration;
+use ArieTimmerman\Laravel\SAML\SimpleSAML\Configuration;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
