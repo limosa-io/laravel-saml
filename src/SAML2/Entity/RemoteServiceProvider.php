@@ -48,12 +48,13 @@ class RemoteServiceProvider extends \SAML2\Configuration\ServiceProvider
         $this->identityProvider = $identityProvider;
     }
 
-    public function getAssertionConsumerUrl(\SAML2\Request $authnRequest)
+    public function getAssertionConsumerUrl(\SAML2\AuthnRequest $authnRequest)
     {
+        
         return $this->getAssertionConsumerService($authnRequest)['Location'];
     }
 
-    public function getAssertionConsumerBinding(\SAML2\Request $authnRequest)
+    public function getAssertionConsumerBinding(\SAML2\AuthnRequest $authnRequest)
     {
         return $this->getAssertionConsumerService($authnRequest)['Binding'];
     }
@@ -165,12 +166,12 @@ class RemoteServiceProvider extends \SAML2\Configuration\ServiceProvider
     }
 
     //TODO: consider something else?
-    public function getEntityId()
+    public function getEntityId() : ?string
     {
         return $this->get('entityid');
     }
 
-    public function getAssertionConsumerService(\SAML2\Request $authnRequest)
+    public function getAssertionConsumerService(\SAML2\AuthnRequest $authnRequest)
     {
         $result = null;
 

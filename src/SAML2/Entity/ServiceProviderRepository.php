@@ -24,7 +24,7 @@ interface ServiceProviderRepository
 {
     /**
      * @param string $entityId
-     * @return ServiceProvider
+     * @return RemoteServiceProvider
      */
     public function getServiceProvider($entityId);
 

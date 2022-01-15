@@ -6,8 +6,8 @@ use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use ArieTimmerman\Laravel\SAML\Config\Config;
-use SimpleSAML\Configuration;
-use SimpleSAML\Metadata\SAMLParser;
+use ArieTimmerman\Laravel\SAML\SimpleSAML\Configuration;
+use ArieTimmerman\Laravel\SAML\SimpleSAML\SAMLParser;
 
 class Helper
 {
@@ -60,7 +60,7 @@ class Helper
         }
 
         // transpose from $entities[entityid][type] to $output[type][entityid]
-        $output = \SimpleSAML\Utils\Arrays::transpose($entities);
+        $output = SAMLParser::transpose($entities);
 
         // merge all metadata of each type to a single string which should be added to the corresponding file
         if (isset($output['saml20-sp-remote'])) {

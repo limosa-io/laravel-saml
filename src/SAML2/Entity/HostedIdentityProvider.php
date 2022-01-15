@@ -20,11 +20,22 @@ namespace ArieTimmerman\Laravel\SAML\SAML2\Entity;
 
 use SAML2\Configuration\IdentityProvider;
 use ArieTimmerman\Laravel\SAML\Exceptions\SAMLException;
+use ArieTimmerman\Laravel\SAML\SAML2\Container;
 use ArieTimmerman\Laravel\SAML\SAMLConfig;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
+use SAML2\Compat\ContainerSingleton;
+use SAML2\XML\saml\Issuer;
 
-class HostedIdentityProvider extends IdentityProvider
+class HostedIdentityProvider
 {
+    protected IdentityProvider $identityProvider;
+
+    public function __construct($configuration)
+    {
+        ContainerSingleton::setContainer(new Container());
+
+        $this->identityProvider = new IdentityProvider($configuration);
+    }
     
     /**
      *
@@ -33,12 +44,12 @@ class HostedIdentityProvider extends IdentityProvider
      */
     public function getSsoUrl()
     {
-        return $this->get('ssoUrl');
+        return $this->identityProvider->get('ssoUrl');
     }
     
     public function getPreviousSessionAuthnContextClassRef()
     {
-        return $this->get('PreviousSession');
+        return $this->identityProvider->get('PreviousSession');
     }
     
     /**
@@ -46,7 +57,7 @@ class HostedIdentityProvider extends IdentityProvider
      */
     public function getSlsUrl()
     {
-        return $this->get('slsUrl');
+        return $this->identityProvider->get('slsUrl');
     }
     
     /**
@@ -68,7 +79,7 @@ class HostedIdentityProvider extends IdentityProvider
      */
     public function wantSignedAuthnRequest()
     {
-        return $this->get("sign.authnrequest");
+        return $this->identityProvider->get("sign.authnrequest");
     }
 
     /**
@@ -77,7 +88,7 @@ class HostedIdentityProvider extends IdentityProvider
      */
     public function wantSignedLogoutRequest()
     {
-        return $this->get("wantSignedLogoutRequest");
+        return $this->identityProvider->get("wantSignedLogoutRequest");
     }
     
     /*
@@ -92,7 +103,7 @@ class HostedIdentityProvider extends IdentityProvider
     {
         
         //TODO: do something with name
-        $keys = $this->get('keys');
+        $keys = $this->identityProvider->get('keys');
         
         $result = @$keys[0]['private'];
         
@@ -106,10 +117,22 @@ class HostedIdentityProvider extends IdentityProvider
     //TODO: do something with name??
     public function getCertificateData()
     {
-        $keys = $this->get('keys');
+        $keys = $this->identityProvider->get('keys');
         
         $result = @$keys[0]['X509Certificate'];
         
         return $result;
+    }
+
+    public function getEntityId()
+    {
+        return $this->identityProvider->getEntityId();
+    }
+
+    public function getIssuer()
+    {
+        $issuer = new Issuer();
+        $issuer->setValue($this->getEntityId());
+        return $issuer;
     }
 }

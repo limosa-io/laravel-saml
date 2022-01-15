@@ -20,9 +20,8 @@
         "illuminate/hashing": "^6.0|^7.0|^8.0",
         "illuminate/http": "^6.0|^7.0|^8.0",
         "illuminate/support": "^6.0|^7.0|^8.0",
-        "simplesamlphp/saml2": "^3.4",
+        "simplesamlphp/saml2": "^4.3",
         "symfony/workflow": "^4.0",
-        "simplesamlphp/simplesamlphp": "^1.18",
         "robrichards/xmlseclibs": "^3.0"
     },
     "classmap": [

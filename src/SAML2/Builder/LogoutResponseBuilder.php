@@ -18,6 +18,8 @@
 
 namespace ArieTimmerman\Laravel\SAML\SAML2\Builder;
 
+use SAML2\LogoutResponse;
+
 class LogoutResponseBuilder extends AbstractResponseBuilder
 {
     /**
@@ -43,6 +45,6 @@ class LogoutResponseBuilder extends AbstractResponseBuilder
      */
     protected function createResponseInstance()
     {
-        $this->response = new \SAML2_LogoutResponse();
+        $this->response = new LogoutResponse();
     }
 }
