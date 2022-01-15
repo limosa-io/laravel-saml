@@ -2,6 +2,7 @@
 
 namespace ArieTimmerman\Laravel\SAML\SimpleSAML;
 
+use Illuminate\Support\Facades\Log;
 use SAML2\Constants;
 use SimpleSAML\Error;
 use SimpleSAML\Utils;
@@ -178,7 +179,7 @@ class Configuration
         self::$loadedConfigs[$filename] = $cfg;
 
         if ($spurious_output) {
-            Logger::warning(
+            Log::warning(
                 "The configuration file '$filename' generates output. Please review your configuration."
             );
         }
@@ -509,15 +510,23 @@ class Configuration
     {
         if (!$this->deprecated_base_url_used) {
             $this->deprecated_base_url_used = true;
-            Logger::warning(
+            Log::warning(
                 "\SimpleSAML\Configuration::getBaseURL() is deprecated, please use getBasePath() instead."
             );
         }
         if (preg_match('/^\*(.*)$/D', $this->getString('baseurlpath', 'simplesaml/'), $matches)) {
             // deprecated behaviour, will be removed in the future
-            return Utils\HTTP::getFirstPathElement(false) . $matches[1];
+            return self::getFirstPathElement(false) . $matches[1];
         }
         return ltrim($this->getBasePath(), '/');
+    }
+
+    public static function getFirstPathElement(bool $leadingSlash = true): string
+    {
+        if (preg_match('|^/(.*?)/|', $_SERVER['SCRIPT_NAME'], $matches)) {
+            return ($leadingSlash ? '/' : '') . $matches[1];
+        }
+        return '';
     }
 
 
