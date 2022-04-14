@@ -42,8 +42,9 @@ class RouteProvider
 
         Route::prefix($prefix)->group(function () use ($options, $prefix) {
 
+            // TODO: May need 'bindings' for some cases
             Route::prefix('v2')->middleware([
-                'bindings', 'web', SAMLState::class
+                'web', SAMLState::class
                 // SAMLState::class
             ])
                 ->group(function () use ($options) {

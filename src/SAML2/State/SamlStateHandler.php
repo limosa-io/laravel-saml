@@ -3,7 +3,7 @@
 namespace ArieTimmerman\Laravel\SAML\SAML2\State;
 
 use Symfony\Component\Workflow\DefinitionBuilder;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 
@@ -220,7 +220,7 @@ class SamlStateHandler
 
         $definition = $builder->build();
 
-        $marking = new SingleStateMarkingStore('state');
+        $marking = new MethodMarkingStore('state');
 
         return new Workflow($definition, $marking, null, "adactive_sas.saml");
     }
