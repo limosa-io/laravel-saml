@@ -11,17 +11,17 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/auth": "^6.0|^7.0|^8.0",
-        "illuminate/console": "^6.0|^7.0|^8.0",
-        "illuminate/container": "^6.0|^7.0|^8.0",
-        "illuminate/contracts": "^6.0|^7.0|^8.0",
-        "illuminate/database": "^6.0|^7.0|^8.0",
-        "illuminate/encryption": "^6.0|^7.0|^8.0",
-        "illuminate/hashing": "^6.0|^7.0|^8.0",
-        "illuminate/http": "^6.0|^7.0|^8.0",
-        "illuminate/support": "^6.0|^7.0|^8.0",
+        "illuminate/auth": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/console": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/container": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/database": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/encryption": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/hashing": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/http": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
         "simplesamlphp/saml2": "^4.3",
-        "symfony/workflow": "^4.0",
+        "symfony/workflow": "^6.0",
         "robrichards/xmlseclibs": "^3.0"
     },
     "classmap": [
@@ -36,9 +36,10 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "~3.0",
+        "orchestra/testbench": "^7",
         "fzaninotto/faker": "^1.7",
-        "squizlabs/php_codesniffer": "^3.2"
+        "squizlabs/php_codesniffer": "^3.2",
+        "laravel/legacy-factories": "*"
     },
     
     "extra": {

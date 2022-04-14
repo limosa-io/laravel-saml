@@ -99,6 +99,18 @@ class SamlState
     {
         return $this->state;
     }
+
+    // TODO: check if this is valid
+    public function getMarking()
+    {
+        return $this->getState();
+    }
+
+    // TODO: check if this is valid
+    public function setMarking($state)
+    {
+        return $this->setState($state);
+    }
     
     /**
      *
