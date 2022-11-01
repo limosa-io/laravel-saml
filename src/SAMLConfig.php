@@ -2,15 +2,16 @@
 
 namespace ArieTimmerman\Laravel\SAML;
 
+use ArieTimmerman\Laravel\SAML\Config\Config;
 use ArieTimmerman\Laravel\SAML\Exceptions\InvalidSamlRequestException;
-use ArieTimmerman\Laravel\SAML\Config;
 use SAML2\AuthnRequest;
 use ArieTimmerman\Laravel\SAML\Exceptions\SAMLException;
+use ArieTimmerman\Laravel\SAML\SAML2\Constants;
 use ArieTimmerman\Laravel\SAML\SAML2\State\SamlState;
+use Illuminate\Support\Facades\Auth;
 
 class SAMLConfig
 {
-
     public function nameIdFormat(AuthnRequest $authnRequest)
     {
 
@@ -20,9 +21,8 @@ class SAMLConfig
             $result = isset($nameIdPolicy['Format']) ? $nameIdPolicy['Format'] : null;
         }
 
-        //If the name if format is omitted in the request, then any type of identifier supported by the identity provider for the requested subject can be used, constrained by any relevant deployment- specific policies, with respect to privacy, for example
         if ($result == null) {
-            $result = $this->get('supportedNameIDFormat');
+            $result = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified";
         }
 
         if (empty($result)) {
@@ -56,12 +56,15 @@ class SAMLConfig
         $isAuthenticated = Auth::check();
 
         if ($isAuthenticated) {
-
             Helper::getSAMLStateOrFail()->setAuthnContext(Constants::AC_PREVIOUS_SESSION);
         } else {
-
             if ($isPassive) {
-                throw (new InvalidSamlRequestException('Invalid Saml request: cannot authenticate passively', \SAML2\Constants::STATUS_NO_PASSIVE))->setAuthnRequest($authnRequest);
+                throw (
+                    new InvalidSamlRequestException(
+                        'Invalid Saml request: cannot authenticate passively',
+                        \SAML2\Constants::STATUS_NO_PASSIVE
+                    )
+                    )->setAuthnRequest($state->getRequest());
             }
 
             $result = redirect(route('loginform', [
