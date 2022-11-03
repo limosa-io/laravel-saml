@@ -1,4 +1,5 @@
 <?php
+
 namespace ArieTimmerman\Laravel\SAML\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,29 +10,6 @@ use ArieTimmerman\Laravel\SAML\SimpleSAML\SAMLParser;
 
 class ManageController extends Controller
 {
-    protected $rules = [
-        'entityid' => 'required',
-        'AssertionConsumerService' => 'nullable|array',
-        'AssertionConsumerService.*.Binding' => 'required',
-        'AssertionConsumerService.*.Location' => 'required|url',
-        'AssertionConsumerService.*.index' => 'required|integer',
-        'SingleLogoutService' => 'nullable',
-        'SingleLogoutService.*.Binding' => 'nullable',
-        'SingleLogoutService.*.Location' => 'url',
-        'keys' => 'nullable',
-        'keys.*.encryption' => 'required|boolean',
-        'keys.*.signing' => 'required|boolean',
-        'keys.*.type' => 'required',
-        'keys.*.X509Certificate' => 'required',
-        'wantSignedAuthnResponse' => 'nullable|boolean',
-
-
-        // TODO: should probably be something like this: saml20.sign.assertion, validate.authnrequest etc
-        'wantSignedAssertions' => 'nullable|boolean',
-        'wantSignedLogoutResponse' => 'nullable|boolean',
-        'wantSignedLogoutRequest' => 'nullable|boolean'
-    ];
-
     protected $rulesIdentityProvider = [
         'PreviousSession' => 'required',
         'sign_authnrequest' => 'required|boolean',
@@ -80,7 +58,7 @@ class ManageController extends Controller
         $request['redirect_sign'] = $input['redirect.sign'];
 
         $valid = $this->validate($request, $this->rulesIdentityProvider);
-        
+
         $valid['sign.authnrequest'] = $request['sign_authnrequest'];
         $valid['metadata.sign.enable'] = $request['metadata_sign_enable'];
         $valid['redirect.sign'] = $request['redirect_sign'];
@@ -113,7 +91,10 @@ class ManageController extends Controller
 
     public function create(Request $request)
     {
-        $valid = $this->validate($request, $this->rules);
+        /** @var RemoteServiceProviderConfigRepositoryInterface */
+        $remoteServiceProviderConfigRepository = resolve(RemoteServiceProviderConfigRepositoryInterface::class);
+
+        $valid = $remoteServiceProviderConfigRepository->validate($request);
         $valid = $this->removeUnknownKeys($valid);
 
         if (resolve(RemoteServiceProviderConfigRepositoryInterface::class)->get($valid['entityid']) != null) {
@@ -128,7 +109,7 @@ class ManageController extends Controller
         try {
             //TODO: For now, disable asserts due to errors.
             assert_options(ASSERT_ACTIVE, 0);
-            
+
             $parsed = SAMLParser::parseString($request->input('metadata'));
             $parsed = $parsed->getMetadata20SP();
 
@@ -146,7 +127,10 @@ class ManageController extends Controller
 
     public function put(Request $request, $id)
     {
-        $valid = $this->validate($request, $this->rules);
+        /** @var RemoteServiceProviderConfigRepositoryInterface */
+        $remoteServiceProviderConfigRepository = resolve(RemoteServiceProviderConfigRepositoryInterface::class);
+
+        $valid = $remoteServiceProviderConfigRepository->validate($request);
         $valid = $this->removeUnknownKeys($valid);
 
         return resolve(RemoteServiceProviderConfigRepositoryInterface::class)->patch($id, $valid);
@@ -165,7 +149,7 @@ class ManageController extends Controller
 
     public function delete(Request $request, $id)
     {
-        
+
         // $serviceProviderConfig = resolve(RemoteServiceProviderConfigRepositoryInterface::class)->get($id);
 
         resolve(RemoteServiceProviderConfigRepositoryInterface::class)->deleteById($id);

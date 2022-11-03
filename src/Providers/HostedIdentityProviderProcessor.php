@@ -16,6 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace ArieTimmerman\Laravel\SAML\Providers;
 
 use ArieTimmerman\Laravel\SAML\SAML2\Entity\HostedIdentityProvider;
@@ -51,7 +52,6 @@ use ArieTimmerman\Laravel\SAML\SimpleSAML\SAMLBuilder;
 
 class HostedIdentityProviderProcessor
 {
-
     /**
      *
      * @var ServiceProviderRepository
@@ -219,8 +219,11 @@ class HostedIdentityProviderProcessor
         //if we start, we should finish ...
         //TODO: create event listener. Write in readme to emit event upon authentication completion
         // $this->stateHandler->apply ( SamlStateHandler::TRANSITION_SSO_START_AUTHENTICATE );
-        
-        $response = $this->identityProvider->getStartAuthenticateResponse($this->stateHandler->get());
+
+        $response = $this->identityProvider->getStartAuthenticateResponse(
+            $this->stateHandler->get(),
+            $sp
+        );
 
         if ($response == null) {
             $this->stateHandler->get()
@@ -245,7 +248,7 @@ class HostedIdentityProviderProcessor
     public function continueSingleSignOn(Subject $subject)
     {
         Log::notice("Continue SSO process");
-        
+
         if (!$this->stateHandler->has() || $this->stateHandler->get()->getRequest() == null) {
             throw new SAMLException("We can't continue. No saved SAML state.");
         }
@@ -256,7 +259,7 @@ class HostedIdentityProviderProcessor
 
         /** @var \SAML2\AuthnRequest $authnRequest */
         $authnRequest = $this->stateHandler->get()->getRequest();
-        
+
         //TODO: check if retrieved authncontext is sufficient
         //$authnContext = $authnRequest->getRequestedAuthnContext()
 
@@ -264,7 +267,7 @@ class HostedIdentityProviderProcessor
 
         $sp = $this->getServiceProvider($authnRequest->getIssuer());
         $outBinding = $this->bindingContainer->get($sp->getAssertionConsumerBinding($authnRequest));
-        
+
         // ensure user is logged in
         if (!$loggedIn) {
             $authnResponse = $this->buildAuthnFailedResponse($authnRequest, Constants::STATUS_AUTHN_FAILED);
@@ -285,7 +288,7 @@ class HostedIdentityProviderProcessor
         // } else {
         $response = $outBinding->getUnsignedResponse($authnResponse);
         // }
-        
+
         // in any case, reset the state!
         $this->stateHandler->resume(true);
 
@@ -368,7 +371,7 @@ class HostedIdentityProviderProcessor
 
         if ($state->hasServiceProviderIds()) {
             $this->stateHandler->apply(SamlStateHandler::TRANSITION_SLS_START_PROPAGATE);
-            
+
             // Dispatch logout to service providers
             $sp = $this->serviceProviderRepository->getServiceProvider($state->popServiceProviderIds());
             $logoutRequest = $this->buildLogoutRequest($sp, $user);
@@ -451,7 +454,7 @@ class HostedIdentityProviderProcessor
 
         $assertionBuilder->setAttributesNameFormat(\SAML2\Constants::NAMEFORMAT_UNSPECIFIED);
 
-        
+
         if ($serviceProvider->wantSignedAssertions()) {
             $assertionBuilder->sign($this->getIdentityProviderXmlPrivateKey(), $this->getIdentityProviderXmlPublicKey());
         }
@@ -491,7 +494,7 @@ class HostedIdentityProviderProcessor
     protected function buildLogoutRequest(RemoteServiceProvider $serviceProvider, $user)
     {
         $logoutRequestBuilder = new LogoutRequestBuilder();
-        
+
         // TODO: get the nameid format for getNameIdValueForUser
         return $logoutRequestBuilder->setNameId($serviceProvider->getNameIdValueForUser(null, $user), \SAML2\Constants::NAMEFORMAT_BASIC)->setIssuer($this->identityProvider->getIssuer())->setDestination($serviceProvider->getSingleLogoutUrl())->setSignatureKey($this->getIdentityProviderXmlPrivateKey())->getRequest();
     }
@@ -557,9 +560,9 @@ class HostedIdentityProviderProcessor
         $xmlPublicKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, [
             'type' => 'public'
         ]);
-        
+
         $publicFileCert = Helper::cleanCertificateKey($publicFileCert);
-        
+
         $xmlPublicKey->loadKey($publicFileCert, false, true);
 
         return $xmlPublicKey;
@@ -572,9 +575,9 @@ class HostedIdentityProviderProcessor
     protected function validateMessage(\SAML2\Message $message)
     {
         $serviceProvider = $this->getServiceProvider($message->getIssuer());
-        
+
         Log::debug(sprintf('Extracting public keys for ServiceProvider "%s"', $serviceProvider->getEntityId()));
-        
+
         $keys = (new \SAML2\Certificate\KeyLoader())->extractPublicKeys($serviceProvider);
 
         Log::debug(sprintf('Found "%d" keys, filtering the keys to get X509 keys', $keys->count()));
@@ -611,7 +614,7 @@ class HostedIdentityProviderProcessor
         }
 
         Log::debug(sprintf('Found "%d" X509 keys, attempting to use each for signature verification', $x509Keys->count()));
-        
+
         /** @var \SAML2\Certificate\X509[] $x509Keys */
         foreach ($x509Keys as $x509Key) {
             $key = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, array(
